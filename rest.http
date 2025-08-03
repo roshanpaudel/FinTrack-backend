@@ -1,0 +1,2 @@
+### testing all the http requests
+GET  http://localhost:8000
