@@ -1,2 +1,15 @@
 ### testing all the http requests
+
+###User
 GET  http://localhost:8000
+
+###Transactions
+
+POST http://localhost:8000/api/v1/users
+Content-Type: application/json
+
+{
+    "name":"Roshan",
+    "email":"a@b.c",
+    "password":"123b"
+}
