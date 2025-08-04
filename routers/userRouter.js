@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 
+
 // User signup
 router.post("/", (req, res) => {
   try {
