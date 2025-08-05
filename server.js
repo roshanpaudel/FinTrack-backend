@@ -3,6 +3,9 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 import userRouter from "./routers/userRouter.js";
 
+//connect DB
+import { connectMongoDB } from "./config/mongodbConfig.js";
+connectMongoDB();
 // Middleware
 app.use(express.json());
 //Api endpoints
