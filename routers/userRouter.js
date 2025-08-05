@@ -2,9 +2,9 @@ import express from "express";
 const router = express.Router();
 
 // User signup
-router.post("/", (req, res) => {
+router.post("/",  (req, res) => {
   try {
-    console.log(req.body);
+     console.log(req.body);
     res.json({
       status: "success",
       message: "TODO",
