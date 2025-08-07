@@ -1,25 +1,24 @@
-# Basic Finance Tracker (MERN Stack)
+# Basic Finance Tracker – Backend (Node.js + Express + MongoDB)
 
-A simple finance tracking web application built with the MERN stack (MongoDB, Express, React, Node.js).  
-Track your income and expenses, view summaries, and manage your transactions easily.
+This is the **backend API** for a simple finance tracking web application built with Node.js, Express, and MongoDB. It allows users to manage their income and expense transactions with secure authentication.
 
 ---
 
 ## Features
 
-- User registration and login (JWT authentication)  
-- Add, edit, and delete income and expense transactions  
-- View transaction list with filters (by date and type)  
-- Dashboard showing total income, expenses, and balance  
-- Responsive and clean user interface
+- User registration and login using **JWT authentication**  
+- Add, edit, delete **income and expense** transactions  
+- View transaction lists with filters (by **date** and **type**)  
+- **Dashboard data**: total income, expenses, and balance summary  
+- Secure and structured API design  
+- Middleware for **authentication** and **error handling**
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React  
-- **Backend:** Node.js, Express  
-- **Database:** MongoDB (using Mongoose)  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB (via Mongoose ODM)  
 - **Authentication:** JSON Web Tokens (JWT)
 
 ---
@@ -28,71 +27,79 @@ Track your income and expenses, view summaries, and manage your transactions eas
 
 ### Prerequisites
 
-- Node.js and npm installed  
-- MongoDB instance (local or MongoDB Atlas)  
-- Yarn or npm (for frontend dependencies)
+- **Node.js** and **npm** installed  
+- **MongoDB** (local instance or MongoDB Atlas)
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/roshanpaudel/FinTrack-frontend.git
-cd finance-tracker
-Backend setup
+git clone https://github.com/roshanpaudel/FinTrack-backend.git
+cd FinTrack-backend
+```
 
-bash
-Copy
-Edit
-cd backend
+2. Install dependencies:
+
+```bash
 npm install
-# Create a .env file with:
-# MONGO_URI=your_mongodb_connection_string
-# JWT_SECRET=your_jwt_secret_key
+```
+
+3. Create a `.env` file in the root of the project and add the following:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+PORT=5000
+```
+
+4. Start the server:
+
+```bash
 npm start
-Frontend setup
+```
 
-bash
-Copy
-Edit
-cd ../frontend
-npm install
-npm start
-The frontend will run on http://localhost:3000 and backend on http://localhost:5000 by default.
+The backend server will run by default at:  
+**http://localhost:5000**
 
-Project Structure
-bash
-Copy
-Edit
-finance-tracker/
-├── backend/            # Express server and API
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # API routes
-│   ├── middleware/     # Auth and error handling middleware
-│   ├── server.js       # Entry point
-├── frontend/           # React app
-│   ├── src/
-│       ├── components/ # React components
-│       ├── pages/      # App pages (Login, Dashboard, etc.)
-│       ├── context/    # React context for auth and state
-│       ├── App.js
-│       ├── index.js
-└── README.md
-Usage
-Register a new user account
+---
 
-Log in to access your dashboard
+## Folder Structure
 
-Add transactions with amount, type (income/expense), category, and description
+```bash
+backend/
+├── models/         # Mongoose schemas (User, Transaction)
+├── routes/         # API route handlers
+├── middleware/     # Custom middleware (auth, error handling)
+├── controllers/    # Route logic for users and transactions
+├── config/         # MongoDB connection config
+├── server.js       # Application entry point
+├── .env            # Environment variables (not committed)
+```
 
-Edit or delete existing transactions
+---
 
-Filter transactions by date or type
+## API Endpoints
 
-View total income, expenses, and current balance on dashboard
+### Auth Routes
+- `POST /api/auth/register` – Register a new user  
+- `POST /api/auth/login` – Authenticate and receive JWT  
 
-License
-This project is licensed under the MIT License.
+### Transaction Routes (Protected)
+- `GET /api/transactions` – Get user’s transactions  
+- `POST /api/transactions` – Add a new transaction  
+- `PUT /api/transactions/:id` – Update a transaction  
+- `DELETE /api/transactions/:id` – Delete a transaction  
 
-Contact
-For any questions or suggestions, feel free to open an issue or contact me paudelroshan93@gmail.com
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## Contact
+
+For any questions or suggestions, feel free to open an issue or contact:  
+📧 **paudelroshan93@gmail.com**
