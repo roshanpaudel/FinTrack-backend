@@ -16,12 +16,13 @@ router.post("/check-email", async (req, res) => {
     return res.status(400).json({ message: "Email is required" });
   }
   try {
-    const existingUser = isExistingEmail(email);
+    const existingUser = await isExistingEmail(email);
 
     if (existingUser) {
-      return res.status(409).json({ message: "Email already taken" });
-    }
-    res.json({ available: true, message: "Email available" });
+      return res
+        .status(409)
+        .json({ available: false, message: "Email already taken" });
+    } else res.json({ available: true, message: "Email available" });
   } catch (error) {
     res.status(500).json({
       status: "error",
