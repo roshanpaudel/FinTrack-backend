@@ -8,7 +8,7 @@ export const isExistingEmail = async(email) => {
   return !!existingEmail;
 };
 // create
-export const insertUser = (userObj) => {
+export const insertSignupData = (userObj) => {
   return userSchema(userObj).save();
 };
 // read
