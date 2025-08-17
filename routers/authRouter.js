@@ -1,13 +1,17 @@
 import express from "express";
-import { insertSignupData, isExistingEmail } from "../models/user/userModel.js";
-import { hashPassword } from "../utils/bcryptJs.js";
+import {
+  getHashByEmail,
+  insertSignupData,
+  isExistingEmail,
+} from "../models/user/userModel.js";
+import { comparePassword, hashPassword } from "../utils/bcryptJs.js";
 
 const router = express.Router();
 
 // email check
 // This endpoint checks if the email is already taken
 router.post("/check-email", async (req, res) => {
-  console.log("Incoming body:", req.body); // 👈 debug log
+  console.log("Server received check-email body:", req.body); // 👈 debug log
 
   const { email } = req.body;
   // Check if email is empty
@@ -18,12 +22,11 @@ router.post("/check-email", async (req, res) => {
     const existingUser = await isExistingEmail(email);
 
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ available: false, message: "Email already taken" });
-    } else res.json({ available: true, message: "Email available" });
+      return res.json({ userExists: true, message: "Existing user" });
+    } else
+      return res.json({ userExists: false, message: "User doesnot exists" });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: "error",
       message: error.message,
     });
@@ -33,9 +36,7 @@ router.post("/check-email", async (req, res) => {
 router.post("/signup", async (req, res) => {
   try {
     //encrypt the password
-    console.log("here is body", req.body);
     req.body.password = hashPassword(req.body.password);
-    console.log("here is the hashed password", req.body.password);
 
     //insert the user
     const user = await insertSignupData(req.body);
@@ -57,8 +58,23 @@ router.post("/signup", async (req, res) => {
 });
 // User login
 router.post("/login", async (req, res) => {
+  console.log("server received login body", req.body);
   try {
     //compare the username and password
+    const hash = await getHashByEmail(req.body.email);
+    console.log("server hash", hash);
+    const isMatch = await comparePassword(req.body.password, hash);
+    console.log("is match", isMatch);
+    if (isMatch) {
+      return res.json({
+        isMatch: true,
+        message: "Login Success",
+      });
+    } else
+      return res.status(401).json({
+        isMatch: false,
+        message: "Invalid password",
+      });
   } catch (error) {
     res.json({
       status: "error",
