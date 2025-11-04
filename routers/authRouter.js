@@ -36,7 +36,7 @@ router.post("/check-email", async (req, res) => {
 router.post("/signup", async (req, res) => {
   try {
     //encrypt the password
-    req.body.password = hashPassword(req.body.password);
+    req.body.password = await hashPassword(req.body.password);
 
     //insert the user
     const user = await insertSignupData(req.body);
@@ -66,6 +66,8 @@ router.post("/login", async (req, res) => {
     const isMatch = await comparePassword(req.body.password, hash);
     console.log("is match", isMatch);
     if (isMatch) {
+   
+
       return res.json({
         isMatch: true,
         message: "Login Success",
