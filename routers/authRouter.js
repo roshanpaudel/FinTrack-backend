@@ -76,9 +76,31 @@ router.post("/login", async (req, res) => {
         secure: false, // true for HTTPS
         sameSite: "strict",
         path: "/refresh",
+        maxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
       });
 
       res.json({ accessToken });
+
+      // ---------------------------------------------------
+      // 🔁 Refresh Token Endpoint
+      // ---------------------------------------------------
+      app.post("/refresh", (req, res) => {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken)
+          return res.status(401).json({ message: "No refresh token found" });
+
+        jwt.verify(
+          refreshToken,
+          process.env.REFRESH_JWT_SECRET,
+          (err, decoded) => {
+            if (err)
+              return res.status(403).json({ message: "Invalid refresh token" });
+
+            const newAccessToken = createAccessJWT(decoded.email);
+            res.json({ accessToken: newAccessToken });
+          }
+        );
+      });
 
       return res.json({
         isMatch: true,
