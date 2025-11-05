@@ -73,34 +73,12 @@ router.post("/login", async (req, res) => {
       // Store refresh token securely in HTTP-only cookie
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true, // cannot be accessed by JS
-        secure: false, // true for HTTPS
+        secure: process.env.NODE_ENV === "production", // 👈 Only true in prod
         sameSite: "strict",
-        path: "/refresh",
         maxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
       });
 
       res.json({ accessToken });
-
-      // ---------------------------------------------------
-      // 🔁 Refresh Token Endpoint
-      // ---------------------------------------------------
-      app.post("/refresh", (req, res) => {
-        const refreshToken = req.cookies.refreshToken;
-        if (!refreshToken)
-          return res.status(401).json({ message: "No refresh token found" });
-
-        jwt.verify(
-          refreshToken,
-          process.env.REFRESH_JWT_SECRET,
-          (err, decoded) => {
-            if (err)
-              return res.status(403).json({ message: "Invalid refresh token" });
-
-            const newAccessToken = createAccessJWT(decoded.email);
-            res.json({ accessToken: newAccessToken });
-          }
-        );
-      });
 
       return res.json({
         isMatch: true,
@@ -117,6 +95,22 @@ router.post("/login", async (req, res) => {
       message: error.message,
     });
   }
+});
+
+// ---------------------------------------------------
+// 🔁 Refresh Token Endpoint
+// ---------------------------------------------------
+router.post("/refresh", (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken)
+    return res.status(401).json({ message: "No refresh token found" });
+
+  jwt.verify(refreshToken, process.env.REFRESH_JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid refresh token" });
+
+    const newAccessToken = createAccessJWT(decoded.email);
+    res.json({ accessToken: newAccessToken });
+  });
 });
 // User profile
 export default router;
