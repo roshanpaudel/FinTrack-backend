@@ -5,6 +5,7 @@ import {
   isExistingEmail,
 } from "../models/user/userModel.js";
 import { comparePassword, hashPassword } from "../utils/bcryptJs.js";
+import { createAccessJWT, createRefreshJWT } from "../utils/jwtToken.js";
 
 const router = express.Router();
 
@@ -66,7 +67,18 @@ router.post("/login", async (req, res) => {
     const isMatch = await comparePassword(req.body.password, hash);
     console.log("is match", isMatch);
     if (isMatch) {
-   
+      //create access token
+      const accessToken = createAccessJWT(req.body.email);
+      const refreshToken = createRefreshJWT(req.body.email);
+      // Store refresh token securely in HTTP-only cookie
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true, // cannot be accessed by JS
+        secure: false, // true for HTTPS
+        sameSite: "strict",
+        path: "/refresh",
+      });
+
+      res.json({ accessToken });
 
       return res.json({
         isMatch: true,

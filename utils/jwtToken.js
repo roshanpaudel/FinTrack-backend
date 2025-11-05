@@ -1,15 +1,26 @@
 import jwt from "jsonwebtoken";
+// ---------------------------------------------------
+// 🔐 Token Generators
+// ---------------------------------------------------
 
-export const createAccessJWT = (email) => {
-  const accessToken = jwt.sign({ email }, process.env.JWT_ACCESS_SECRET, {
+/**
+ * Generates a short-lived Access Token (used for authorization)
+ * - Payload: user's email
+ * - Expires in: 15 minutes
+ */
+const createAccessJWT = (email) =>
+  jwt.sign({ email }, process.env.ACCESS_JWT_SECRET, {
     expiresIn: "15m",
   });
-  return accessToken;
-};
 
-export const createRefreshJWT = (email) => {
-  const refreshToken = jwt.sign({ email }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: "30d",
+/**
+ * Generates a long-lived Refresh Token (used to get new Access Token)
+ * - Payload: user's email
+ * - Expires in: 180 days (~6 months)
+ */
+const createRefreshJWT = (email) =>
+  jwt.sign({ email }, process.env.REFRESH_JWT_SECRET, {
+    expiresIn: "180d",
   });
-  return refreshToken;
-};
+
+export { createAccessJWT, createRefreshJWT };
