@@ -67,22 +67,21 @@ router.post("/login", async (req, res) => {
     const isMatch = await comparePassword(req.body.password, hash);
     console.log("is match", isMatch);
     if (isMatch) {
-      //create access token
-      const accessToken = createAccessJWT(req.body.email);
-      const refreshToken = createRefreshJWT(req.body.email);
-      // Store refresh token securely in HTTP-only cookie
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true, // cannot be accessed by JS
-        secure: process.env.NODE_ENV === "production", // 👈 Only true in prod
-        sameSite: "strict",
-        maxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
-      });
-
-      res.json({ accessToken });
+      // //create access token
+      // const accessToken = createAccessJWT(req.body.email);
+      // const refreshToken = createRefreshJWT(req.body.email);
+      // // Store refresh token securely in HTTP-only cookie
+      // res.cookie("refreshToken", refreshToken, {
+      //   httpOnly: true, // cannot be accessed by JS
+      //   secure: process.env.NODE_ENV === "production", // 👈 Only true in prod
+      //   sameSite: "strict",
+      //   maxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
+      // });
 
       return res.json({
         isMatch: true,
         message: "Login Success",
+        // accessToken,
       });
     } else
       return res.status(401).json({
@@ -91,7 +90,7 @@ router.post("/login", async (req, res) => {
       });
   } catch (error) {
     res.json({
-      status: "error",
+      status: "server error",
       message: error.message,
     });
   }
@@ -112,5 +111,4 @@ router.post("/refresh", (req, res) => {
     res.json({ accessToken: newAccessToken });
   });
 });
-// User profile
 export default router;
