@@ -35,6 +35,10 @@ app.use("/api/v1/users", authMiddleware, userRouter);
 import transactionRouter from "./routers/transactionRouter.js";
 app.use("/api/v1/transactions", authMiddleware, transactionRouter);
 
+// Profile Routers Api endpoints
+import profileRouter from "./routers/profileRouter.js";
+app.use("/api/v1/profile", authMiddleware, profileRouter);
+
 app.get("/", (req, res) => {
   res.json({
     message: "We are Live",
