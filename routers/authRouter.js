@@ -6,6 +6,7 @@ import {
 } from "../models/user/userModel.js";
 import { comparePassword, hashPassword } from "../utils/bcryptJs.js";
 import { createAccessJWT, createRefreshJWT } from "../utils/jwtToken.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -67,22 +68,28 @@ router.post("/login", async (req, res) => {
     const isMatch = await comparePassword(req.body.password, hash);
     console.log("is match", isMatch);
     if (isMatch) {
-      // //create access token
-      // const accessToken = createAccessJWT(req.body.email);
-      // const refreshToken = createRefreshJWT(req.body.email);
-      // // Store refresh token securely in HTTP-only cookie
-      // res.cookie("refreshToken", refreshToken, {
-      //   httpOnly: true, // cannot be accessed by JS
-      //   secure: process.env.NODE_ENV === "production", // 👈 Only true in prod
-      //   sameSite: "strict",
-      //   maxAge: 180 * 24 * 60 * 60 * 1000, // 180 days
-      // });
+      try {
+        const accessToken = createAccessJWT(req.body.email);
+        const refreshToken = createRefreshJWT(req.body.email);
 
-      return res.json({
-        isMatch: true,
-        message: "Login Success",
-        // accessToken,
-      });
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: 180 * 24 * 60 * 60 * 1000,
+        });
+
+        return res.json({
+          isMatch: true,
+          message: "Login Success",
+          accessToken,
+        });
+      } catch (err) {
+        console.error("Token creation error:", err);
+        return res
+          .status(500)
+          .json({ status: "error", message: "Token error" });
+      }
     } else
       return res.status(401).json({
         isMatch: false,
