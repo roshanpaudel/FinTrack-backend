@@ -4,9 +4,16 @@ const MONGO_URL =
 
 export const connectMongoDB = async () => {
   try {
+    if (mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
     const conn = await mongoose.connect(MONGO_URL);
-    conn && console.log("MongoDB connected");
+    if (conn) {
+      console.log("MongoDB connected");
+    }
+    return conn;
   } catch (error) {
     console.log(error);
+    return null;
   }
 };

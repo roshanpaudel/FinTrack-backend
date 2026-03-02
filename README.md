@@ -48,9 +48,12 @@ npm install
 3. Create a `.env` file in the root of the project and add the following:
 
 ```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-PORT=5000
+MONGO_URL=your_primary_mongodb_connection_string
+TRANSACTIONS_MONGO_URL=your_transactions_mongodb_connection_string
+ACCESS_JWT_SECRET=your_access_jwt_secret
+REFRESH_JWT_SECRET=your_refresh_jwt_secret
+FRONTEND_ORIGIN=http://localhost:5173
+PORT=8000
 ```
 
 4. Start the server:
@@ -60,7 +63,14 @@ npm start
 ```
 
 The backend server will run by default at:  
-**http://localhost:5000**
+**http://localhost:8000**
+
+### Deploying to Vercel
+
+- Deploy the `ft-api` directory as its own Vercel project.
+- `vercel.json` is included and routes all requests to `api/index.js`.
+- Set these environment variables in Vercel: `MONGO_URL`, `TRANSACTIONS_MONGO_URL`, `ACCESS_JWT_SECRET`, `REFRESH_JWT_SECRET`, `FRONTEND_ORIGIN`.
+- Set `FRONTEND_ORIGIN` to your deployed frontend URL (or a comma-separated list of allowed origins).
 
 ---
 

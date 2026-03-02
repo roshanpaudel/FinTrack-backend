@@ -7,7 +7,10 @@ const TRANSACTIONS_MONGO_URL =
 let transactionsConnection = null;
 
 export const connectTransactionsDB = () => {
-  if (transactionsConnection) {
+  if (transactionsConnection && transactionsConnection.readyState === 1) {
+    return transactionsConnection;
+  }
+  if (transactionsConnection && transactionsConnection.readyState === 2) {
     return transactionsConnection;
   }
 

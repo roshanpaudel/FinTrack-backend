@@ -41,6 +41,8 @@ const transactionSchema = mongoose.Schema(
 );
 
 const connection = getTransactionsConnection() || connectTransactionsDB();
-const Transaction = connection.model("Transaction", transactionSchema);
+const Transaction =
+  connection.models.Transaction ||
+  connection.model("Transaction", transactionSchema);
 
 export default Transaction;

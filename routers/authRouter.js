@@ -13,8 +13,6 @@ const router = express.Router();
 // email check
 // This endpoint checks if the email is already taken
 router.post("/check-email", async (req, res) => {
-  console.log("Server received check-email body:", req.body); // 👈 debug log
-
   const { email } = req.body;
   // Check if email is empty
   if (!email) {
@@ -60,22 +58,20 @@ router.post("/signup", async (req, res) => {
 });
 // User login
 router.post("/login", async (req, res) => {
-  console.log("server received login body", req.body);
   try {
     //compare the username and password
     const hash = await getHashByEmail(req.body.email);
-    console.log("server hash", hash);
     const isMatch = await comparePassword(req.body.password, hash);
-    console.log("is match", isMatch);
     if (isMatch) {
       try {
         const accessToken = createAccessJWT(req.body.email);
         const refreshToken = createRefreshJWT(req.body.email);
+        const isProduction = process.env.NODE_ENV === "production";
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
           maxAge: 180 * 24 * 60 * 60 * 1000,
         });
 

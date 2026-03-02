@@ -39,6 +39,7 @@ const profileSchema = mongoose.Schema(
 );
 
 const connection = getTransactionsConnection() || connectTransactionsDB();
-const Profile = connection.model("Profile", profileSchema);
+const Profile =
+  connection.models.Profile || connection.model("Profile", profileSchema);
 
 export default Profile;
